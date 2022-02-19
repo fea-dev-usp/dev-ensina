@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>{speechbr}: O que é? Como usar?</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="static/css/custom.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <code>{speechbr}</code>: O que é? Como usar?
+### <img src = 'img/hexlogo.png' width = '30%'>
+### February 2022
+
+---
+
+
+
+
+# Por que em R?
+
+* No geral, só porque eu gosto mais mesmo.
+* Atingir um público específico, cientistas sociais e jornalistas de dados, que trabalham mais com R do que com Python, por exemplo.
+
+&lt;img src="img/R_logo.png" width = '30%'; style="position: fixed; width: 40%; top: 250px; left: 300px;"&gt;
+
+---
+
+# O que é um pacote?
+
+* Ideia de agrupar e manter funções criadas por você, em um "ambiente" só
+
+* Compartilhar esse ambiente com outras pessoas, permitindo que elas utilizem da mesma forma que você as utiliza localmente
+
+* É muito complicado pensar que se você quer criar algo novo na linguagem (R) tu precisaria fazer mudanças na base
+
+* Acelera o desenvolvimento da ferramenta (Open Source)
+
+.center[
+
+&lt;img src="img/grafico_cran.png" width = '70%'&gt;
+
+]
+---
+class: middle, center
+
+# O que é o `{speechbr}`?
+
+Simula uma pesquisa no próprio [site](https://www2.camara.leg.br/atividade-legislativa/discursos-e-notas-taquigraficas) de Banco de Discursos da Câmara dos Deputados
+
+## Vamos ver na prática!
+
+.center[
+
+&lt;img src="img/trump_hands_on.gif" width = '50%'&gt;
+
+]
+
+---
+
+# Baixando o pacote
+
+* O pacote está no [CRAN](https://cran.r-project.org/web/packages/speechbr/index.html), o que significa você poder baixá-lo utilizando funções nativas do R. 
+
+* CRAN é o principal repositório de pacotes em R, a principal vantagem é conseguir baixá-lo facilmente com `install.packages` e o pacote é testado diariamente em diferentes sistemas.
+
+
+```r
+# instalar o pacote
+install.packages("speechbr")
+```
+
+* O que está no CRAN é a versão 1.0.0. Caso você queira acessar o pacote em desenvolvimento, precisa baixá-lo do GitHub, onde fica hospedado os códigos.
+
+
+```r
+install.packages("devtools")
+
+devtools::install_github("dcardosos/speechbr")
+```
+
+---
+
+# Argumentos
+
+* O pacote possui apenas uma função (pública e disponível), `speech_data`, que recebe os seguintes argumentos:
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; args &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; description &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; mandatory &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; keyword &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; palavra ou frase a ser presquisada &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; start_date &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; data de início da pesquisa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; end_date &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; data de fim da pesquisa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; speaker &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; orador do discurso &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; party &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; partido do orador &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; uf &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; estado do orador &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# E vamos as consultas
+
+```r
+library(speechbr)
+speech_data(keyword = "aborto", start_date = "2021-05-01", end_date = "2021-06-30")
+```
+
+&lt;table style="width:40%; font-size: 10px; margin-left: auto; margin-right: auto;" class="table"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; data &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; sessao &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fase &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; discurso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; orador &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; partido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; estado &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; hora &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; publicacao &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2021-06-30 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 72.2021 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ORDEM DO DIA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Obrigado, Sr. Presidente.Passo à leitura do relatório &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ALUISIO MENDES &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PSC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 15h52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DCD01/07/2021 PAG. 51 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2021-06-08 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 60.2021 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ORDEM DO DIA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gostaria de agradecer à Comissão dos Direitos das Pes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MÁRCIO LABRE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PSL &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; RJ &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 20h16 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DCD09/06/2021 PAG. 124 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2021-05-26 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 56.2021 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; COMISSÃO GERAL &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; tados, Brasil que assiste à sessão, é preciso informa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PR. MARCO FELICIANO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; REPUBLICANOS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SP &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11h04 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DCD27/05/2021 PAG. 26 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2021-05-05 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 45.2021 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ORDEM DO DIA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; primeiro quero saber se o som está saindo perfeitamen &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CORONEL TADEU &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PSL &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SP &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 22h16 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DCD06/05/2021 PAG. 149 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2021-05-04 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10.2021.N &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ORDEM DO DIA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ) - Presidente, meu caro Senador Rodrigo Pacheco, Pre &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; REINHOLD STEPHANES JUNIOR &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PSD &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PR &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11h44 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DCN 06/05/2021 PAG. 32 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Você pode filtrar ainda mais os resultados utilizando dos outros argumentos, que são opcionais. Para saber mais sobre os argumentos, você pode acessar a documentação com `?speech_data`.
+
+---
+
+# Tá, mas e agora?
+
+Existem inúmeras possibilidades do que fazer com os dados, principalmente envolvendo algo chamado Processamento de Linguagem Natural, que abrange termos como:
+
+- Análise de sentimento
+- Modelagem de tópicos
+- Summary writer
+- Classificação de textos
+- Reconhecimento de textos similares
+- Outros
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -134,5 +134,5 @@ Existem inúmeras possibilidades do que fazer com os dados, principalmente envol
 - Summary writer
 - Classificação de textos
 - Reconhecimento de textos similares
-
+- Outros
 ---
