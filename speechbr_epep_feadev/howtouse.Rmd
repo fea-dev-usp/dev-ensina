@@ -18,13 +18,33 @@ editor_options:
 library(ggplot2)
 library(magrittr)
 library(knitr)
-#library(tidyverse)
-#library(ISLR)
+library(dplyr)
+library(stringr)
+library(tibble)
+library(tidytext)
 library(kableExtra)
 theme_set(theme_minimal(14))
 options(htmltools.dir.version = FALSE)
 ```
 
+
+# O que é o `{speechbr}`?
+
+Uma ferramenta na linguagem de programação R que acessa os textos dos discursos de deputados e deputadas da Câmara Federal (aprendi com vocês EPEP), junto com informações de quem fez o discurso e da sessão na Câmara. Mais detalhes depois.
+
+.pull-left[
+
+<img src="img/hexlogo.png" width = '70%'>
+
+]
+
+.pull-right[
+
+<img src="img/camara.jpeg" width = '100%'>
+
+]
+
+---
 # Por que em R?
 
 * No geral, só porque eu gosto mais mesmo.
@@ -52,7 +72,7 @@ options(htmltools.dir.version = FALSE)
 ---
 class: middle, center
 
-# O que é o `{speechbr}`?
+# Voltando ao `{speechbr}`?
 
 Simula uma pesquisa no próprio [site](https://www2.camara.leg.br/atividade-legislativa/discursos-e-notas-taquigraficas) de Banco de Discursos da Câmara dos Deputados
 
@@ -93,7 +113,7 @@ devtools::install_github("dcardosos/speechbr")
 
 ```{r params, echo=FALSE}
 
-tibble::tibble(
+tibble(
   args = c("keyword", "start_date", "end_date", "speaker", "party", "uf"),
   description = c("palavra ou frase a ser presquisada",
                   "data de início da pesquisa",
@@ -102,7 +122,7 @@ tibble::tibble(
                   "partido do orador",
                   "estado do orador"), 
   mandatory = c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)) %>% 
-  knitr::kable()
+  kable()
 
 ```
 
@@ -116,9 +136,9 @@ speech_data(keyword = "aborto", start_date = "2021-05-01", end_date = "2021-06-3
 
 ```{r aborto_csv, echo = FALSE, message=FALSE}
 readr::read_csv("data/aborto.csv") %>% 
-  dplyr::mutate(discurso = stringr::str_sub(discurso, 88, 140)) %>% 
-  knitr::kable(table.attr = "style='width:40%;'") %>% 
-  kableExtra::kable_styling(font_size = 10)
+  mutate(discurso = str_sub(discurso, 88, 140)) %>% 
+  kable(table.attr = "style='width:40%;'") %>% 
+  kable_styling(font_size = 10)
 ```
 
 Você pode filtrar ainda mais os resultados utilizando dos outros argumentos, que são opcionais. Para saber mais sobre os argumentos, você pode acessar a documentação com `?speech_data`.
@@ -136,3 +156,95 @@ Existem inúmeras possibilidades do que fazer com os dados, principalmente envol
 - Reconhecimento de textos similares
 - Outros
 ---
+class: middle, center
+
+# Topic modelling
+
+Modelos de aprendizado de máquina que identifica tópicos em uma coleção de documentos, descobre estruturas semânticas escondidas. Primeiro, vamos ver as palavras mais usadas em uma base de dados que extrai anteriormente sobre desigualdade.
+
+## Palavras mais utilizadas
+
+```{r desigualdade_csv, echo = FALSE, message=FALSE}
+bolso <- readr::read_csv("data/bozo.csv") 
+
+stopwords <- tidytext::get_stopwords("pt") %>% 
+  bind_rows(
+    tibble(
+      word = c("é", "sr", "presidente", "ser", "aqui", "deputado", "deputados", "brasil", "vai", "fazer", "sobre", "porque", "jair",
+               "bolsonaro", "ter", "neste", "v.exa", "orador",
+               "revisão"),
+      lexicon = "snowball"))
+
+tidy_bolso <- bolso %>%
+  rowid_to_column("document") %>% 
+  unnest_tokens(word, discurso) %>% 
+  anti_join(stopwords) 
+
+tidy_bolso %>% 
+  count(word, sort = TRUE) %>% 
+  slice_max(order_by = n, n = 20) %>% 
+  kbl() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "400px", width = "800px")
+```
+
+---
+class: middle, center
+
+# Modelo
+
+```{r modelo, echo=FALSE}
+bolso_sparse <- 
+  tidy_bolso %>% 
+  count(document, word) %>% 
+  cast_sparse(document, word, n)
+
+topic_model <- stm::stm(bolso_sparse, K = 4, verbose = FALSE)
+
+#summary(topic_model)
+
+word_topics <- tidy(topic_model, matrix = "beta")
+
+word_topics %>%
+  group_by(topic) %>%
+  slice_max(beta, n = 10) %>%
+  ungroup() %>%
+  mutate(topic = paste("Topic", topic)) %>%
+  ggplot(aes(beta, reorder_within(term, beta, topic), fill = topic)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(vars(topic), scales = "free_y") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_reordered() +
+  labs(x = expression(beta), y = NULL)
+```
+---
+class: middle, center
+## Análise por ano
+
+```{r count_per_year, echo=FALSE, eval=FALSE}
+
+tidy_bolso %>% 
+  mutate(ano = lubridate::year(data)) %>% 
+  group_by(ano) %>% 
+  count(word) %>% 
+  slice_max(order_by = n, n = 5) %>% 
+  ungroup() %>% 
+  ggplot(aes(n, reorder_within(word, n, ano), fill = ano)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(vars(ano), scales = "free_y") +
+  scale_y_reordered() +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(x = "Raw count", y = NULL)
+```
+
+<img src="img/raw_count.png">
+---
+class: center, inverse
+
+# Finalização
+
+Use o pacote se puder! É com uso que eu irei poder melhorá-lo, ainda tem muita coisa que pode ser melhorada, e você pode contribuir!!! A tecnologia só está desse jeito hoje porque lá atrás as pessoas abriram seus códigos ao mundo e outros colaboraram.
+
+.center[
+<img src="img/tks.gif">
+]

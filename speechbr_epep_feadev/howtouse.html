@@ -24,6 +24,24 @@ class: center, middle, inverse, title-slide
 
 
 
+
+# O que é o `{speechbr}`?
+
+Uma ferramenta na linguagem de programação R que acessa os textos dos discursos de deputados e deputadas da Câmara Federal (aprendi com vocês EPEP), junto com informações de quem fez o discurso e da sessão na Câmara. Mais detalhes depois.
+
+.pull-left[
+
+&lt;img src="img/hexlogo.png" width = '70%'&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="img/camara.jpeg" width = '100%'&gt;
+
+]
+
+---
 # Por que em R?
 
 * No geral, só porque eu gosto mais mesmo.
@@ -51,7 +69,7 @@ class: center, middle, inverse, title-slide
 ---
 class: middle, center
 
-# O que é o `{speechbr}`?
+# Voltando ao `{speechbr}`?
 
 Simula uma pesquisa no próprio [site](https://www2.camara.leg.br/atividade-legislativa/discursos-e-notas-taquigraficas) de Banco de Discursos da Câmara dos Deputados
 
@@ -231,6 +249,128 @@ Existem inúmeras possibilidades do que fazer com os dados, principalmente envol
 - Reconhecimento de textos similares
 - Outros
 ---
+class: middle, center
+
+# Topic modelling
+
+Modelos de aprendizado de máquina que identifica tópicos em uma coleção de documentos, descobre estruturas semânticas escondidas. Primeiro, vamos ver as palavras mais usadas em uma base de dados que extrai anteriormente sobre desigualdade.
+
+## Palavras mais utilizadas
+
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:800px; "&gt;&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; word &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; n &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; militares &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1567 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; militar &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1220 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; governo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1189 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; casa &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1124 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; anos &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1121 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; forças &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1103 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; armadas &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1009 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rj &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 927 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ministro &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 896 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; agora &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 866 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; país &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 816 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; exército &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 806 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; pt &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 797 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; quero &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 775 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; dia &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 769 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; hoje &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 768 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; comissão &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 734 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ano &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 708 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; pp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 705 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; todos &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 704 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+---
+class: middle, center
+
+# Modelo
+
+![](howtouse_files/figure-html/modelo-1.png)&lt;!-- --&gt;
+---
+class: middle, center
+## Análise por ano
+
+
+
+&lt;img src="img/raw_count.png"&gt;
+---
+class: center, inverse
+
+# Finalização
+
+Use o pacote se puder! É com uso que eu irei poder melhorá-lo, ainda tem muita coisa que pode ser melhorada, e você pode contribuir!!! A tecnologia só está desse jeito hoje porque lá atrás as pessoas abriram seus códigos ao mundo e outros colaboraram.
+
+.center[
+&lt;img src="img/tks.gif"&gt;
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
